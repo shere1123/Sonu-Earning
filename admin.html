@@ -1,1 +1,2178 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Earning Nepal Admin</title>
 
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,"Noto Sans Devanagari",sans-serif;
+    background:#f4f6f9;
+    color:#172033;
+}
+
+header{
+    background:linear-gradient(135deg,#101929,#1769d1);
+    color:white;
+    padding:16px;
+}
+
+.header{
+    max-width:1100px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:bold;
+}
+
+.logout{
+    border:0;
+    background:white;
+    color:#d00;
+    padding:9px 15px;
+    border-radius:9px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:16px;
+}
+
+.status{
+    padding:14px;
+    background:#fff3cd;
+    border-radius:12px;
+    margin-bottom:15px;
+    line-height:1.7;
+}
+
+.login{
+    background:white;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 4px 20px #0001;
+    display:none;
+}
+
+input,select{
+    width:100%;
+    padding:11px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    margin-bottom:10px;
+}
+
+button{
+    cursor:pointer;
+}
+
+.primary{
+    border:0;
+    background:#1769d1;
+    color:white;
+    padding:11px 16px;
+    border-radius:9px;
+    font-weight:bold;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.stat{
+    background:white;
+    padding:18px;
+    border-radius:15px;
+    box-shadow:0 4px 18px #0001;
+}
+
+.stat small{
+    color:#777;
+}
+
+.stat h2{
+    margin:8px 0 0;
+}
+
+.tabs{
+    display:flex;
+    gap:8px;
+    overflow:auto;
+    margin:20px 0;
+}
+
+.tab{
+    border:0;
+    padding:11px 16px;
+    border-radius:10px;
+    background:white;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.tab.active{
+    background:#1769d1;
+    color:white;
+}
+
+.section{
+    display:none;
+    background:white;
+    padding:18px;
+    border-radius:16px;
+}
+
+.section.active{
+    display:block;
+}
+
+.table{
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    min-width:750px;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:11px;
+    border-bottom:1px solid #eee;
+    text-align:left;
+}
+
+th{
+    background:#f7f9fc;
+}
+
+.action{
+    border:0;
+    padding:7px 10px;
+    border-radius:7px;
+    font-weight:bold;
+    margin:2px;
+}
+
+.approve{
+    background:#dff8e7;
+    color:#08752e;
+}
+
+.reject{
+    background:#ffe2e2;
+    color:#b00000;
+}
+
+.view{
+    background:#e4efff;
+    color:#1769d1;
+}
+
+.plan{
+    margin-top:10px;
+    padding:15px;
+    border:1px solid #eee;
+    border-radius:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.info{
+    background:#f7f9fc;
+    padding:15px;
+    border-radius:12px;
+    line-height:2;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#000c;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+}
+
+.modal img{
+    max-width:100%;
+    max-height:85vh;
+    border-radius:10px;
+}
+
+.close{
+    position:absolute;
+    top:15px;
+    right:15px;
+    border:0;
+    background:white;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    font-size:20px;
+}
+
+@media(max-width:700px){
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:520px){
+    .container{
+        padding:11px;
+    }
+
+    .stat{
+        padding:13px;
+    }
+
+    .stat h2{
+        font-size:20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="header">
+<div class="logo">⚡ Earning Nepal Admin</div>
+
+<button class="logout" onclick="logout()">
+Logout
+</button>
+</div>
+</header>
+
+<div class="container">
+
+<div id="status" class="status">
+🔄 Firebase जाँच हुँदैछ...
+</div>
+
+<!-- LOGIN -->
+
+<div id="loginBox" class="login">
+
+<h3>🔐 Admin Login</h3>
+
+<input
+id="email"
+type="email"
+value="sukumayatv48@gmail.com"
+placeholder="Admin Email">
+
+<input
+id="password"
+type="password"
+placeholder="Password">
+
+<button
+id="loginBtn"
+class="primary"
+onclick="login()"
+style="width:100%">
+
+Login
+
+</button>
+
+<p id="loginError" style="color:red"></p>
+
+</div>
+
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="stat">
+<small>Users</small>
+<h2 id="usersCount">0</h2>
+</div>
+
+<div class="stat">
+<small>Pending Deposits</small>
+<h2 id="depositCount">0</h2>
+</div>
+
+<div class="stat">
+<small>Investments</small>
+<h2 id="investmentCount">0</h2>
+</div>
+
+<div class="stat">
+<small>Pending Withdrawals</small>
+<h2 id="withdrawCount">0</h2>
+</div>
+
+</div>
+
+
+<!-- TABS -->
+
+<div class="tabs">
+
+<button class="tab active"
+onclick="tab('dashboard',this)">
+Dashboard
+</button>
+
+<button class="tab"
+onclick="tab('deposits',this)">
+Deposits
+</button>
+
+<button class="tab"
+onclick="tab('withdrawals',this)">
+Withdrawals
+</button>
+
+<button class="tab"
+onclick="tab('users',this)">
+Users
+</button>
+
+<button class="tab"
+onclick="tab('plans',this)">
+Plans
+</button>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard"
+class="section active">
+
+<h2>Admin Dashboard</h2>
+
+<div class="info">
+
+<b>Email:</b>
+<span id="adminEmail">-</span>
+
+<br>
+
+<b>Firebase UID:</b>
+<span id="adminUid">-</span>
+
+<br>
+
+<b>Firestore Role:</b>
+<span id="adminRole">-</span>
+
+<br>
+
+<b>Status:</b>
+<span id="adminState">-</span>
+
+</div>
+
+</section>
+
+
+<!-- DEPOSITS -->
+
+<section id="deposits"
+class="section">
+
+<h2>💰 Deposit Requests</h2>
+
+<div class="table">
+
+<table>
+
+<thead>
+<tr>
+<th>User</th>
+<th>Amount</th>
+<th>Method</th>
+<th>Transaction ID</th>
+<th>Screenshot</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="depositTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- WITHDRAWALS -->
+
+<section id="withdrawals"
+class="section">
+
+<h2>💸 Withdrawal Requests</h2>
+
+<div class="table">
+
+<table>
+
+<thead>
+<tr>
+<th>User</th>
+<th>Amount</th>
+<th>Method</th>
+<th>Account</th>
+<th>Name</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="withdrawTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- USERS -->
+
+<section id="users"
+class="section">
+
+<h2>👥 Users</h2>
+
+<div class="table">
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Balance</th>
+<th>Deposit</th>
+<th>Withdraw</th>
+<th>Investment</th>
+<th>Role</th>
+</tr>
+</thead>
+
+<tbody id="usersTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- PLANS -->
+
+<section id="plans"
+class="section">
+
+<h2>📊 Investment Plans</h2>
+
+<input id="planName"
+placeholder="Plan Name">
+
+<input id="planAmount"
+type="number"
+placeholder="Amount">
+
+<input id="planDaily"
+type="number"
+placeholder="Daily Amount">
+
+<input id="planDays"
+type="number"
+placeholder="Days">
+
+<button class="primary"
+onclick="addPlan()">
+
++ Add Plan
+
+</button>
+
+<div id="plansList"></div>
+
+</section>
+
+</div>
+
+
+<!-- IMAGE MODAL -->
+
+<div id="imageModal"
+class="modal">
+
+<button
+class="close"
+onclick="closeImage()">
+×
+</button>
+
+<img id="modalImage">
+
+</div>
+
+
+<script type="module">
+
+import {
+    initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut,
+    setPersistence,
+    browserLocalPersistence
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    collection,
+    getDocs,
+    query,
+    where,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    runTransaction,
+    serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* ================= FIREBASE ================= */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyAnos9h6VNUShfPKBU91-BAe3-Aa8N5268",
+
+authDomain:
+"earning-nepal-99681.firebaseapp.com",
+
+projectId:
+"earning-nepal-99681",
+
+storageBucket:
+"earning-nepal-99681.firebasestorage.app",
+
+messagingSenderId:
+"52519359933",
+
+appId:
+"1:52519359933:web:83cf5fb128fd008fbb2ed4"
+
+};
+
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+const db =
+getFirestore(app);
+
+
+/* ================= ADMIN EMAIL ================= */
+
+const ADMIN_EMAIL =
+"sukumayatv48@gmail.com";
+
+let adminReady =
+false;
+
+
+/* ================= AUTH PERSISTENCE ================= */
+
+await setPersistence(
+    auth,
+    browserLocalPersistence
+);
+
+
+/* ================= AUTH STATE ================= */
+
+onAuthStateChanged(
+    auth,
+    async user => {
+
+        const status =
+        document.getElementById(
+            "status"
+        );
+
+        const loginBox =
+        document.getElementById(
+            "loginBox"
+        );
+
+
+        if(!user){
+
+            adminReady =
+            false;
+
+            loginBox.style.display =
+            "block";
+
+            status.innerHTML =
+            "🔐 Admin login गर्नुहोस्।";
+
+            return;
+        }
+
+
+        /* ========================================
+           EMAIL CHECK
+        ======================================== */
+
+        if(
+            user.email?.toLowerCase() !==
+            ADMIN_EMAIL.toLowerCase()
+        ){
+
+            adminReady =
+            false;
+
+            status.innerHTML =
+            "❌ यो Admin email होइन।<br>" +
+            "Login Email: " +
+            safe(user.email);
+
+            loginBox.style.display =
+            "block";
+
+            return;
+        }
+
+
+        /* ========================================
+           SHOW REAL AUTH UID
+        ======================================== */
+
+        document.getElementById(
+            "adminEmail"
+        ).textContent =
+        user.email;
+
+
+        document.getElementById(
+            "adminUid"
+        ).textContent =
+        user.uid;
+
+
+        try{
+
+            /*
+             * IMPORTANT:
+             * Firestore document ID
+             * Authentication UID नै हुनुपर्छ।
+             */
+
+            const userRef =
+            doc(
+                db,
+                "users",
+                user.uid
+            );
+
+
+            const snap =
+            await getDoc(
+                userRef
+            );
+
+
+            if(!snap.exists()){
+
+                adminReady =
+                false;
+
+                status.innerHTML =
+                "❌ Firestore मा यो Admin को user document भेटिएन।<br><br>" +
+
+                "<b>Authentication UID:</b><br>" +
+                user.uid;
+
+                document.getElementById(
+                    "adminRole"
+                ).textContent =
+                "Document not found";
+
+                document.getElementById(
+                    "adminState"
+                ).textContent =
+                "Error";
+
+                return;
+            }
+
+
+            const data =
+            snap.data();
+
+
+            document.getElementById(
+                "adminRole"
+            ).textContent =
+            data.role || "user";
+
+
+            /*
+             * SECURITY:
+             * Admin email + Firestore role
+             */
+
+            if(
+                String(data.role || "")
+                .trim()
+                .toLowerCase()
+                !==
+                "admin"
+            ){
+
+                adminReady =
+                false;
+
+                status.innerHTML =
+                "❌ Firestore मा role = admin छैन।<br><br>" +
+
+                "<b>हालको role:</b> " +
+                safe(data.role || "empty") +
+                "<br><br>" +
+
+                "Firestore document मा यसलाई " +
+                "<b>admin</b> राख्नुहोस्।";
+
+                document.getElementById(
+                    "adminState"
+                ).textContent =
+                "Role Error";
+
+                return;
+            }
+
+
+            /* ====================================
+               ADMIN SUCCESS
+            ==================================== */
+
+            adminReady =
+            true;
+
+            loginBox.style.display =
+            "none";
+
+            status.innerHTML =
+            "✅ Admin Mode Active<br>" +
+            "Welcome, " +
+            safe(user.email);
+
+
+            status.style.background =
+            "#dff8e7";
+
+
+            document.getElementById(
+                "adminState"
+            ).textContent =
+            "Active";
+
+
+            await loadDashboard();
+
+        }catch(error){
+
+            console.error(error);
+
+            adminReady =
+            false;
+
+            status.innerHTML =
+            "❌ Firebase Error:<br>" +
+            safe(error.message);
+
+            document.getElementById(
+                "adminState"
+            ).textContent =
+            "Error";
+
+        }
+
+    }
+);
+
+
+/* ================= LOGIN ================= */
+
+window.login =
+async function(){
+
+    const email =
+    document.getElementById(
+        "email"
+    ).value.trim();
+
+
+    const password =
+    document.getElementById(
+        "password"
+    ).value;
+
+
+    const error =
+    document.getElementById(
+        "loginError"
+    );
+
+
+    error.textContent =
+    "";
+
+
+    if(!email || !password){
+
+        error.textContent =
+        "Email र Password राख्नुहोस्।";
+
+        return;
+    }
+
+
+    try{
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+    }catch(e){
+
+        console.error(e);
+
+        error.textContent =
+        e.message;
+
+    }
+
+};
+
+
+/* ================= DASHBOARD ================= */
+
+async function loadDashboard(){
+
+    if(!adminReady)
+    return;
+
+
+    try{
+
+        const users =
+        await getDocs(
+            collection(
+                db,
+                "users"
+            )
+        );
+
+
+        const deposits =
+        await getDocs(
+            query(
+                collection(
+                    db,
+                    "deposits"
+                ),
+                where(
+                    "status",
+                    "==",
+                    "pending"
+                )
+            )
+        );
+
+
+        const withdrawals =
+        await getDocs(
+            query(
+                collection(
+                    db,
+                    "withdrawals"
+                ),
+                where(
+                    "status",
+                    "==",
+                    "pending"
+                )
+            )
+        );
+
+
+        const investments =
+        await getDocs(
+            collection(
+                db,
+                "investments"
+            )
+        );
+
+
+        document.getElementById(
+            "usersCount"
+        ).textContent =
+        users.size;
+
+
+        document.getElementById(
+            "depositCount"
+        ).textContent =
+        deposits.size;
+
+
+        document.getElementById(
+            "withdrawCount"
+        ).textContent =
+        withdrawals.size;
+
+
+        document.getElementById(
+            "investmentCount"
+        ).textContent =
+        investments.size;
+
+
+    }catch(e){
+
+        console.error(
+            "Dashboard:",
+            e
+        );
+
+        document.getElementById(
+            "status"
+        ).innerHTML =
+        "❌ Dashboard Error:<br>" +
+        safe(e.message);
+
+    }
+
+}
+
+
+/* ================= TABS ================= */
+
+window.tab =
+function(id,btn){
+
+    document
+    .querySelectorAll(
+        ".section"
+    )
+    .forEach(
+        x =>
+        x.classList.remove(
+            "active"
+        )
+    );
+
+
+    document
+    .querySelectorAll(
+        ".tab"
+    )
+    .forEach(
+        x =>
+        x.classList.remove(
+            "active"
+        )
+    );
+
+
+    document
+    .getElementById(id)
+    .classList.add(
+        "active"
+    );
+
+
+    btn.classList.add(
+        "active"
+    );
+
+
+    if(id==="deposits")
+        loadDeposits();
+
+    if(id==="withdrawals")
+        loadWithdrawals();
+
+    if(id==="users")
+        loadUsers();
+
+    if(id==="plans")
+        loadPlans();
+
+};
+
+
+/* ================= DEPOSITS ================= */
+
+async function loadDeposits(){
+
+    const tbody =
+    document.getElementById(
+        "depositTable"
+    );
+
+
+    tbody.innerHTML =
+    "<tr><td colspan='7'>Loading...</td></tr>";
+
+
+    try{
+
+        const snap =
+        await getDocs(
+            collection(
+                db,
+                "deposits"
+            )
+        );
+
+
+        tbody.innerHTML =
+        "";
+
+
+        if(snap.empty){
+
+            tbody.innerHTML =
+            "<tr><td colspan='7'>No deposits</td></tr>";
+
+            return;
+        }
+
+
+        snap.forEach(
+            d=>{
+
+                const x =
+                d.data();
+
+
+                const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+                let image =
+                "-";
+
+
+                if(x.screenshotURL){
+
+                    image =
+                    `<button class="action view"
+                    onclick='viewImage(${JSON.stringify(x.screenshotURL)})'>
+                    View
+                    </button>`;
+
+                }
+
+
+                let actions =
+                "-";
+
+
+                if(x.status==="pending"){
+
+                    actions = `
+
+                    <button
+                    class="action approve"
+                    onclick="approveDeposit('${d.id}')">
+
+                    Approve
+
+                    </button>
+
+                    <button
+                    class="action reject"
+                    onclick="rejectDeposit('${d.id}')">
+
+                    Reject
+
+                    </button>
+
+                    `;
+
+                }
+
+
+                tr.innerHTML = `
+
+                <td>${safe(x.userEmail || x.userId)}</td>
+
+                <td>Rs. ${money(x.amount)}</td>
+
+                <td>${safe(x.method)}</td>
+
+                <td>${safe(x.transactionId)}</td>
+
+                <td>${image}</td>
+
+                <td>${safe(x.status)}</td>
+
+                <td>${actions}</td>
+
+                `;
+
+
+                tbody.appendChild(tr);
+
+            }
+        );
+
+    }catch(e){
+
+        tbody.innerHTML =
+        `<tr>
+        <td colspan="7">
+        ❌ ${safe(e.message)}
+        </td>
+        </tr>`;
+
+    }
+
+}
+
+
+/* ================= APPROVE DEPOSIT ================= */
+
+window.approveDeposit =
+async function(id){
+
+    if(!confirm(
+        "Deposit approve गर्ने?"
+    ))
+    return;
+
+
+    try{
+
+        await runTransaction(
+            db,
+            async transaction => {
+
+                const depositRef =
+                doc(
+                    db,
+                    "deposits",
+                    id
+                );
+
+
+                const depositSnap =
+                await transaction.get(
+                    depositRef
+                );
+
+
+                if(!depositSnap.exists())
+                    throw new Error(
+                        "Deposit भेटिएन।"
+                    );
+
+
+                const deposit =
+                depositSnap.data();
+
+
+                if(
+                    deposit.status !==
+                    "pending"
+                )
+                    throw new Error(
+                        "Already processed."
+                    );
+
+
+                const userRef =
+                doc(
+                    db,
+                    "users",
+                    deposit.userId
+                );
+
+
+                const userSnap =
+                await transaction.get(
+                    userRef
+                );
+
+
+                if(!userSnap.exists())
+                    throw new Error(
+                        "User भेटिएन।"
+                    );
+
+
+                const user =
+                userSnap.data();
+
+
+                const amount =
+                Number(
+                    deposit.amount
+                );
+
+
+                transaction.update(
+                    userRef,
+                    {
+
+                        balance:
+                        Number(
+                            user.balance || 0
+                        ) + amount,
+
+                        totalDeposit:
+                        Number(
+                            user.totalDeposit || 0
+                        ) + amount
+
+                    }
+                );
+
+
+                transaction.update(
+                    depositRef,
+                    {
+
+                        status:
+                        "approved",
+
+                        approvedAt:
+                        serverTimestamp(),
+
+                        approvedBy:
+                        auth.currentUser.uid
+
+                    }
+                );
+
+
+                const txRef =
+                doc(
+                    collection(
+                        db,
+                        "transactions"
+                    )
+                );
+
+
+                transaction.set(
+                    txRef,
+                    {
+
+                        userId:
+                        deposit.userId,
+
+                        userEmail:
+                        deposit.userEmail || "",
+
+                        type:
+                        "deposit",
+
+                        amount:
+                        amount,
+
+                        method:
+                        deposit.method || "",
+
+                        transactionId:
+                        deposit.transactionId || "",
+
+                        status:
+                        "approved",
+
+                        createdAt:
+                        serverTimestamp()
+
+                    }
+                );
+
+            }
+        );
+
+
+        alert(
+            "Deposit Approved"
+        );
+
+
+        loadDeposits();
+        loadDashboard();
+
+
+    }catch(e){
+
+        alert(
+            "Error:\n" +
+            e.message
+        );
+
+    }
+
+};
+
+
+/* ================= REJECT DEPOSIT ================= */
+
+window.rejectDeposit =
+async function(id){
+
+    if(!confirm(
+        "Deposit reject गर्ने?"
+    ))
+    return;
+
+
+    try{
+
+        await updateDoc(
+            doc(
+                db,
+                "deposits",
+                id
+            ),
+            {
+
+                status:
+                "rejected",
+
+                rejectedAt:
+                serverTimestamp(),
+
+                rejectedBy:
+                auth.currentUser.uid
+
+            }
+        );
+
+
+        alert(
+            "Deposit rejected"
+        );
+
+
+        loadDeposits();
+        loadDashboard();
+
+
+    }catch(e){
+
+        alert(
+            e.message
+        );
+
+    }
+
+};
+
+
+/* ================= WITHDRAWALS ================= */
+
+async function loadWithdrawals(){
+
+    const tbody =
+    document.getElementById(
+        "withdrawTable"
+    );
+
+
+    tbody.innerHTML =
+    "<tr><td colspan='7'>Loading...</td></tr>";
+
+
+    try{
+
+        const snap =
+        await getDocs(
+            collection(
+                db,
+                "withdrawals"
+            )
+        );
+
+
+        tbody.innerHTML =
+        "";
+
+
+        if(snap.empty){
+
+            tbody.innerHTML =
+            "<tr><td colspan='7'>No withdrawals</td></tr>";
+
+            return;
+        }
+
+
+        snap.forEach(
+            d=>{
+
+                const x =
+                d.data();
+
+
+                let actions =
+                "-";
+
+
+                if(x.status==="pending"){
+
+                    actions = `
+
+                    <button
+                    class="action approve"
+                    onclick="approveWithdrawal('${d.id}')">
+
+                    Approve
+
+                    </button>
+
+                    <button
+                    class="action reject"
+                    onclick="rejectWithdrawal('${d.id}')">
+
+                    Reject
+
+                    </button>
+
+                    `;
+
+                }
+
+
+                const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+                tr.innerHTML = `
+
+                <td>${safe(x.userEmail || x.userId)}</td>
+
+                <td>Rs. ${money(x.amount)}</td>
+
+                <td>${safe(x.method)}</td>
+
+                <td>${safe(x.account)}</td>
+
+                <td>${safe(x.accountName)}</td>
+
+                <td>${safe(x.status)}</td>
+
+                <td>${actions}</td>
+
+                `;
+
+
+                tbody.appendChild(tr);
+
+            }
+        );
+
+
+    }catch(e){
+
+        tbody.innerHTML =
+        `<tr>
+        <td colspan="7">
+        ❌ ${safe(e.message)}
+        </td>
+        </tr>`;
+
+    }
+
+}
+
+
+/* ================= APPROVE WITHDRAW ================= */
+
+window.approveWithdrawal =
+async function(id){
+
+    if(!confirm(
+        "Withdrawal approve गर्ने?"
+    ))
+    return;
+
+
+    try{
+
+        await runTransaction(
+            db,
+            async transaction=>{
+
+                const ref =
+                doc(
+                    db,
+                    "withdrawals",
+                    id
+                );
+
+
+                const snap =
+                await transaction.get(
+                    ref
+                );
+
+
+                if(!snap.exists())
+                    throw new Error(
+                        "Withdrawal भेटिएन।"
+                    );
+
+
+                const withdrawal =
+                snap.data();
+
+
+                const userRef =
+                doc(
+                    db,
+                    "users",
+                    withdrawal.userId
+                );
+
+
+                const userSnap =
+                await transaction.get(
+                    userRef
+                );
+
+
+                if(!userSnap.exists())
+                    throw new Error(
+                        "User भेटिएन।"
+                    );
+
+
+                const user =
+                userSnap.data();
+
+
+                const amount =
+                Number(
+                    withdrawal.amount
+                );
+
+
+                const balance =
+                Number(
+                    user.balance || 0
+                );
+
+
+                if(balance < amount)
+                    throw new Error(
+                        "Balance पर्याप्त छैन।"
+                    );
+
+
+                transaction.update(
+                    userRef,
+                    {
+
+                        balance:
+                        balance - amount,
+
+                        totalWithdraw:
+                        Number(
+                            user.totalWithdraw || 0
+                        ) + amount
+
+                    }
+                );
+
+
+                transaction.update(
+                    ref,
+                    {
+
+                        status:
+                        "approved",
+
+                        approvedAt:
+                        serverTimestamp(),
+
+                        approvedBy:
+                        auth.currentUser.uid
+
+                    }
+                );
+
+
+                const tx =
+                doc(
+                    collection(
+                        db,
+                        "transactions"
+                    )
+                );
+
+
+                transaction.set(
+                    tx,
+                    {
+
+                        userId:
+                        withdrawal.userId,
+
+                        userEmail:
+                        withdrawal.userEmail || "",
+
+                        type:
+                        "withdraw",
+
+                        amount:
+                        amount,
+
+                        method:
+                        withdrawal.method || "",
+
+                        account:
+                        withdrawal.account || "",
+
+                        accountName:
+                        withdrawal.accountName || "",
+
+                        status:
+                        "approved",
+
+                        createdAt:
+                        serverTimestamp()
+
+                    }
+                );
+
+            }
+        );
+
+
+        alert(
+            "Withdrawal Approved"
+        );
+
+
+        loadWithdrawals();
+        loadDashboard();
+
+
+    }catch(e){
+
+        alert(
+            e.message
+        );
+
+    }
+
+};
+
+
+/* ================= REJECT WITHDRAW ================= */
+
+window.rejectWithdrawal =
+async function(id){
+
+    if(!confirm(
+        "Withdrawal reject गर्ने?"
+    ))
+    return;
+
+
+    try{
+
+        await updateDoc(
+            doc(
+                db,
+                "withdrawals",
+                id
+            ),
+            {
+
+                status:
+                "rejected",
+
+                rejectedAt:
+                serverTimestamp(),
+
+                rejectedBy:
+                auth.currentUser.uid
+
+            }
+        );
+
+
+        alert(
+            "Withdrawal rejected"
+        );
+
+
+        loadWithdrawals();
+        loadDashboard();
+
+
+    }catch(e){
+
+        alert(
+            e.message
+        );
+
+    }
+
+};
+
+
+/* ================= USERS ================= */
+
+async function loadUsers(){
+
+    const tbody =
+    document.getElementById(
+        "usersTable"
+    );
+
+
+    tbody.innerHTML =
+    "<tr><td colspan='7'>Loading...</td></tr>";
+
+
+    try{
+
+        const snap =
+        await getDocs(
+            collection(
+                db,
+                "users"
+            )
+        );
+
+
+        tbody.innerHTML =
+        "";
+
+
+        snap.forEach(
+            d=>{
+
+                const x =
+                d.data();
+
+
+                const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+                tr.innerHTML = `
+
+                <td>${safe(x.name || "-")}</td>
+
+                <td>${safe(x.email || "-")}</td>
+
+                <td>Rs. ${money(x.balance)}</td>
+
+                <td>Rs. ${money(x.totalDeposit)}</td>
+
+                <td>Rs. ${money(x.totalWithdraw)}</td>
+
+                <td>Rs. ${money(x.totalInvestment)}</td>
+
+                <td>${safe(x.role || "user")}</td>
+
+                `;
+
+
+                tbody.appendChild(tr);
+
+            }
+        );
+
+
+    }catch(e){
+
+        tbody.innerHTML =
+        `<tr>
+        <td colspan="7">
+        ❌ ${safe(e.message)}
+        </td>
+        </tr>`;
+
+    }
+
+}
+
+
+/* ================= PLANS ================= */
+
+async function loadPlans(){
+
+    const box =
+    document.getElementById(
+        "plansList"
+    );
+
+
+    box.innerHTML =
+    "Loading...";
+
+
+    try{
+
+        const snap =
+        await getDocs(
+            collection(
+                db,
+                "investmentPlans"
+            )
+        );
+
+
+        box.innerHTML =
+        "";
+
+
+        snap.forEach(
+            d=>{
+
+                const x =
+                d.data();
+
+
+                const div =
+                document.createElement(
+                    "div"
+                );
+
+
+                div.className =
+                "plan";
+
+
+                div.innerHTML = `
+
+                <div>
+
+                <b>${safe(x.name)}</b>
+
+                <br>
+
+                Amount:
+                Rs. ${money(x.amount)}
+
+                <br>
+
+                Daily:
+                Rs. ${money(x.daily)}
+
+                <br>
+
+                Days:
+                ${money(x.days)}
+
+                </div>
+
+                <button
+                class="action reject"
+                onclick="deletePlan('${d.id}')">
+
+                Delete
+
+                </button>
+
+                `;
+
+
+                box.appendChild(div);
+
+            }
+        );
+
+
+    }catch(e){
+
+        box.innerHTML =
+        "❌ " + safe(e.message);
+
+    }
+
+}
+
+
+/* ================= ADD PLAN ================= */
+
+window.addPlan =
+async function(){
+
+    const name =
+    document.getElementById(
+        "planName"
+    ).value.trim();
+
+
+    const amount =
+    Number(
+        document.getElementById(
+            "planAmount"
+        ).value
+    );
+
+
+    const daily =
+    Number(
+        document.getElementById(
+            "planDaily"
+        ).value
+    );
+
+
+    const days =
+    Number(
+        document.getElementById(
+            "planDays"
+        ).value
+    );
+
+
+    if(
+        !name ||
+        amount<=0 ||
+        daily<=0 ||
+        days<=0
+    ){
+
+        alert(
+            "सबै field भर्नुहोस्।"
+        );
+
+        return;
+    }
+
+
+    try{
+
+        await addDoc(
+            collection(
+                db,
+                "investmentPlans"
+            ),
+            {
+
+                name,
+                amount,
+                daily,
+                days,
+
+                createdAt:
+                serverTimestamp()
+
+            }
+        );
+
+
+        document.getElementById(
+            "planName"
+        ).value="";
+
+
+        document.getElementById(
+            "planAmount"
+        ).value="";
+
+
+        document.getElementById(
+            "planDaily"
+        ).value="";
+
+
+        document.getElementById(
+            "planDays"
+        ).value="";
+
+
+        loadPlans();
+
+
+    }catch(e){
+
+        alert(
+            e.message
+        );
+
+    }
+
+};
+
+
+/* ================= DELETE PLAN ================= */
+
+window.deletePlan =
+async function(id){
+
+    if(!confirm(
+        "Plan delete गर्ने?"
+    ))
+    return;
+
+
+    try{
+
+        await deleteDoc(
+            doc(
+                db,
+                "investmentPlans",
+                id
+            )
+        );
+
+
+        loadPlans();
+
+    }catch(e){
+
+        alert(
+            e.message
+        );
+
+    }
+
+};
+
+
+/* ================= IMAGE ================= */
+
+window.viewImage =
+function(url){
+
+    document.getElementById(
+        "modalImage"
+    ).src =
+    url;
+
+
+    document.getElementById(
+        "imageModal"
+    ).style.display =
+    "flex";
+
+};
+
+
+window.closeImage =
+function(){
+
+    document.getElementById(
+        "imageModal"
+    ).style.display =
+    "none";
+
+};
+
+
+/* ================= LOGOUT ================= */
+
+window.logout =
+async function(){
+
+    await signOut(
+        auth
+    );
+
+    location.reload();
+
+};
+
+
+/* ================= HELPERS ================= */
+
+function safe(value){
+
+    return String(
+        value ?? ""
+    )
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function money(value){
+
+    const n =
+    Number(value || 0);
+
+    if(!Number.isFinite(n))
+        return "0";
+
+    return n.toLocaleString(
+        "en-IN"
+    );
+
+}
+
+</script>
+
+</body>
+</html>
